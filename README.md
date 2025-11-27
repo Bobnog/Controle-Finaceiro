@@ -83,8 +83,19 @@ Siga os passos abaixo para configurar e executar o ambiente de desenvolvimento l
 
 -   O frontend será aberto automaticamente no seu navegador em `http://localhost:3000`.
 
+## 部署 (Deploy)
+
+Este projeto está configurado para deploy contínuo na nuvem utilizando as seguintes plataformas:
+
+-   **Backend (API):** Hospedado no [Render](https://render.com/). O deploy é gerenciado pelo arquivo `render.yaml` na raiz do projeto, que configura o serviço web e o banco de dados PostgreSQL.
+-   **Frontend (UI):** Hospedado na [Vercel](https://vercel.com/). A Vercel detecta automaticamente a aplicação React e a publica.
+
+Para que o frontend se comunique com o backend, a seguinte variável de ambiente deve ser configurada na Vercel:
+
+-   `REACT_APP_API_URL`: A URL do serviço do backend publicado no Render.
+
 ## ⚠️ Notas Importantes
 
--   **Primeiro Usuário:** Para fazer login no frontend, você precisa primeiro registrar um usuário. Utilize a documentação do backend (`/docs`) para enviar uma requisição `POST` para o endpoint `/auth/register`.
--   **Segurança:** A `SECRET_KEY` de exemplo no arquivo `backend/app/auth.py` é insegura e deve ser substituída por uma string aleatória e segura em um ambiente de produção.
--   **Banco de Dados:** A aplicação utiliza um banco de dados SQLite, que é um arquivo local em `backend/finance.db`.
+-   **Banco de Dados:** A aplicação utiliza **SQLite** para desenvolvimento local (o arquivo `backend/finance.db`). Em produção, no Render, é utilizado um banco de dados **PostgreSQL** para persistência de dados.
+-   **Primeiro Usuário:** Para fazer login no frontend, você precisa primeiro registrar um usuário. Utilize a interface da aplicação ou a documentação do backend (`/docs`) para se registrar.
+-   **Segurança:** A `SECRET_KEY` de exemplo no arquivo `backend/app/auth.py` é insegura e deve ser substituída por uma string aleatória e segura em um ambiente de produção (usando variáveis de ambiente).

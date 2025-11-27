@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios'; // Importa a biblioteca Axios para fazer requisições HTTP.
+import apiClient from '../api'; // Importa a instância configurada do Axios.
 import { useNavigate, Link } from 'react-router-dom'; // Importa useNavigate para redirecionamento e Link para navegação declarativa.
 import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material'; // Componentes de UI do Material-UI.
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'; // Ícone de cadeado do Material-UI.
@@ -35,7 +35,7 @@ export default function Register() {
 
     try {
       // Envia uma requisição POST para o endpoint de registro da API.
-      await axios.post("http://127.0.0.1:8000/users/register", {
+      await apiClient.post("/users/register", {
         email: email,
         senha: senha,
       });

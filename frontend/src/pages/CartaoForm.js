@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios'; // Importa a biblioteca Axios para fazer requisições HTTP.
+import apiClient from '../api'; // Importa a instância configurada do Axios.
 import { 
     TextField, Button, Switch, FormControlLabel, // Componentes de UI do Material-UI para campos de texto, botões, switch e rótulos de controle.
     Dialog, DialogActions, DialogContent, DialogTitle, Box // Componentes de UI do Material-UI para caixas de diálogo.
@@ -55,17 +55,15 @@ export default function CartaoForm({ open, onSave, onCancel, initialData }) {
     async function handleSubmit(e) {
         e.preventDefault(); // Previne o comportamento padrão de recarregar a página.
         setError(""); // Limpa qualquer erro anterior.
-        const token = localStorage.getItem("token"); // Obtém o token de autenticação do localStorage.
-        // Cria o objeto de dados da fatura, convertendo valor, mês e ano para os tipos corretos.
         const cartaoData = { instituicao, valor: parseFloat(valor), mes: parseInt(mes), ano: parseInt(ano), pago };
 
         try {
             if (isEditMode) {
                 // Se em modo de edição, envia uma requisição PUT para atualizar a fatura existente.
-                await axios.put(`http://127.0.0.1:8000/cartoes/${initialData.id}`, cartaoData, { headers: { Authorization: `Bearer ${token}` } });
+                await apiClient.put(`/cartoes/${initialData.id}`, cartaoData);
             } else {
                 // Se em modo de criação, envia uma requisição POST para adicionar uma nova fatura.
-                await axios.post("http://127.0.0.1:8000/cartoes/", cartaoData, { headers: { Authorization: `Bearer ${token}` } });
+                await apiClient.post("/cartoes/", cartaoData);
             }
             onSave(); // Chama a função onSave passada por props após o sucesso.
         } catch (err) {

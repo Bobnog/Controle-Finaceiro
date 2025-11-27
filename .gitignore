@@ -3,8 +3,18 @@
 /frontend/node_modules
 /backend/.venv
 
+# Python cache
+__pycache__/
+
 # Build files
 /build
 /dist
 *.log
-.env
+
+# Environment variables
+# Nunca comite arquivos de ambiente!
+.env*
+!/.env.example
+
+# Local database
+/backend/finance.db

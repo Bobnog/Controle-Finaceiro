@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios'; // Importa a biblioteca Axios para fazer requisições HTTP.
+import apiClient from '../api'; // Importa a instância configurada do Axios.
 import { Link, useNavigate } from 'react-router-dom'; // Importa Link para navegação e useNavigate para redirecionamento programático.
 import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material'; // Componentes de UI do Material-UI.
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'; // Ícone de cadeado do Material-UI.
@@ -36,7 +36,7 @@ export default function Login({ onLogin }){
     
     try {
       // Envia uma requisição POST para o endpoint de token da API para autenticar o usuário.
-      const { data } = await axios.post("http://127.0.0.1:8000/users/token", form, { 
+      const { data } = await apiClient.post("/users/token", form, { 
         headers: { "Content-Type": "application/x-www-form-urlencoded" } // Define o tipo de conteúdo do cabeçalho.
       });
       localStorage.setItem("token", data.access_token); // Armazena o token de acesso no localStorage.

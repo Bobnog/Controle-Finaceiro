@@ -1,0 +1,29 @@
+# Arquivo de configuração para o deploy no Render
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Serviço para o backend da API em FastAPI
+  - type: web
+    name: finance-backend
+    runtime: python
+    # O Render vai procurar o requirements.txt dentro deste diretório
+    rootDir: backend
+    # Comando para instalar as dependências
+    buildCommand: "pip install -r requirements.txt"
+    # Comando para iniciar a aplicação em produção
+    # Usamos gunicorn como servidor WSGI, com uvicorn como 'worker' para aplicações ASGI (FastAPI)
+    startCommand: "gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app"
+    # A variável de ambiente DATABASE_URL será injetada automaticamente
+    # a partir do banco de dados definido abaixo.
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11 # Especifica uma versão do Python
+
+  # Serviço para o banco de dados PostgreSQL
+  - type: psql
+    name: finance-database
+    # A versão do PostgreSQL. A '14' é uma escolha estável e segura.
+    # O Render gerencia backups e segurança.
+    # O plano gratuito ("free") pode ser suspenso após 90 dias de inatividade.
+    plan: free
+    version: "14"

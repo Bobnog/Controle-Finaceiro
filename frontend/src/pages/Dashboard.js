@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import axios from 'axios'; // Importa a biblioteca Axios para fazer requisições HTTP.
+import apiClient from '../api'; // Importa a instância configurada do Axios.
 import { 
     AppBar, Toolbar, Typography, Button, Container, Grid, Paper, 
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
@@ -60,13 +60,11 @@ export default function Dashboard({ onLogout }) {
      * Utiliza `useCallback` para memorizar a função e evitar recriações desnecessárias.
      */
     const fetchData = useCallback(async () => {
-    const token = localStorage.getItem("token"); // Obtém o token de autenticação.
-    const headers = { Authorization: `Bearer ${token}` }; // Define os cabeçalhos de autorização.
     try {
         // Realiza requisições paralelas para dados do dashboard e dados do usuário.
         const [dashRes, userRes] = await Promise.all([
-            axios.get(`http://127.0.0.1:8000/dashboard/?mes=${date.month}&ano=${date.year}`, { headers }),
-            axios.get("http://127.0.0.1:8000/users/me", { headers })
+            apiClient.get(`/dashboard/?mes=${date.month}&ano=${date.year}`),
+            apiClient.get("/users/me")
         ]);
         // Atualiza os estados com os dados recebidos.
         setDashboardData(dashRes.data);
@@ -125,12 +123,9 @@ export default function Dashboard({ onLogout }) {
     const handleDelete = async (type, id) => {
         // Confirma com o usuário antes de deletar.
         if (!window.confirm("Tem certeza que deseja deletar este item?")) return;
-        const token = localStorage.getItem("token");
         try {
             // Envia requisição DELETE para a API.
-            await axios.delete(`http://127.0.0.1:8000/${type}/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await apiClient.delete(`/${type}/${id}`);
             fetchData(); // Recarrega os dados após a exclusão.
         } catch (err) {
             setError(`Erro ao deletar item.`); // Define mensagem de erro.
@@ -141,10 +136,9 @@ export default function Dashboard({ onLogout }) {
      * Salva o salário base do usuário na API.
      */
     const saveSalario = async () => {
-        const token = localStorage.getItem("token");
         try {
             // Envia requisição PUT para atualizar o salário do usuário.
-            await axios.put("http://127.0.0.1:8000/users/me", { salario }, { headers: { Authorization: `Bearer ${token}` } });
+            await apiClient.put("/users/me", { salario });
             fetchData(); // Recarrega os dados para refletir a mudança no dashboard.
         } catch (err) { setError("Erro ao salvar salário."); } // Define mensagem de erro.
     };

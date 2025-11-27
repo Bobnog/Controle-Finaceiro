@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios'; // Importa a biblioteca Axios para fazer requisições HTTP.
+import apiClient from '../api'; // Importa a instância configurada do Axios.
 import { 
     TextField, Button, Select, MenuItem, FormControl, InputLabel, // Componentes de UI do Material-UI para campos de texto, botões, seleção e rótulos de controle.
     Dialog, DialogActions, DialogContent, DialogTitle, Box // Componentes de UI do Material-UI para caixas de diálogo.
@@ -58,17 +58,15 @@ export default function TransacaoForm({ open, onSave, onCancel, initialData }) {
     async function handleSubmit(e) {
         e.preventDefault(); // Previne o comportamento padrão de recarregar a página.
         setError(""); // Limpa qualquer erro anterior.
-        const token = localStorage.getItem("token"); // Obtém o token de autenticação do localStorage.
-        // Cria o objeto de dados da transação, convertendo o valor para float.
         const transactionData = { tipo, valor: parseFloat(valor), categoria, descricao, data };
 
         try {
             if (isEditMode) {
                 // Se em modo de edição, envia uma requisição PUT para atualizar a transação existente.
-                await axios.put(`http://127.0.0.1:8000/transacoes/${initialData.id}`, transactionData, { headers: { Authorization: `Bearer ${token}` } });
+                await apiClient.put(`/transacoes/${initialData.id}`, transactionData);
             } else {
                 // Se em modo de criação, envia uma requisição POST para adicionar uma nova transação.
-                await axios.post("http://127.0.0.1:8000/transacoes/", transactionData, { headers: { Authorization: `Bearer ${token}` } });
+                await apiClient.post("/transacoes/", transactionData);
             }
             onSave(); // Chama a função onSave passada por props após o sucesso.
         } catch (err) {
